@@ -1,14 +1,24 @@
 {
-  "Graphic Era University" : [
-    30.26764446077741, 77.99521366865675
+  "Graphic Era University": [
+    77.99521366865675,
+    30.26764446077741
   ],
-  "Graphic Era Hill University" : [
-    30.27335235845439, 78.00005897308918
+  "Graphic Era Hill University": [
+    78.00005897308918,
+    30.27335235845439
   ],
-  "Satya Hostel (Maharana Pratab)" : 
-  [30.270663985188772, 77.98691664490728],
-  "Rajpur Road" : [30.324855691811795, 78.04206093563668],
-  "Pacific Mall Rajpur road" : [30.366626996371842, 78.07033902213335],
+  "Satya Hostel (Maharana Pratab)": [
+    77.98691664490728,
+    30.270663985188772
+  ],
+  "Rajpur Road": [
+    78.04206093563668,
+    30.324855691811795
+  ],
+  "Pacific Mall Rajpur road": [
+    78.07033902213335,
+    30.366626996371842
+  ],
   "#5 tuktuk to bus going Musoorie": [
     77.9961337,
     30.288503
