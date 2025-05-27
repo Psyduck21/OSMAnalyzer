@@ -1,116 +1,268 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-  
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  color: #212529;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #1e1e1e;
-    color: #ddd;
-  }
-  #sidebar h2 {
-    margin: 0.5rem 0;     
-    line-height: 1.1;     
-  }
-  
-  #map-icon {
-    position: relative;
-    padding-left: 32px;    
-  }
-  
-  #map-icon::before{
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    margin-right: 10px;
-    transform: translateY(-50%);
-    display: block;
-    width: 25px;          
-    height: 25px;
-    background: url("./map.png") no-repeat center;
-    background-size: contain;
-    filter: brightness(0) contrast(100) invert(1);
-  }
-  
-  /* Sidebar */
-  #sidebar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 300px;
-    height: 100%;
-    background: #2c2c2c;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    overflow-y: auto;
-    box-sizing: border-box;
-  }
-  
-  #sidebar h2, #sidebar h3 {
-    margin-top: 0;
-    color: #fff;
-  }
-  
-  #sidebar h2 span {
-    color: #ff4b5c;
-    font-size: 2.5rem;
-    font-weight: 800;
-  }
-  
-  #sidebar section {
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
-  
-  #sidebar label {
-    display: block;
-    margin-bottom: 10px;
+/* Layout container */
+body {
+  display: flex;
+}
 
+/* Left panel (fixed width) */
+#left-panel {
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  z-index: 1000;
+  height: 100vh;
+}
+
+/* Inputs container */
+#inputs {
+  background: #fff;
+  padding: 32px 24px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.08);
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* Input styles */
+#inputs h2 {
+  font-size: 2rem;
+  margin: 0 0 1px;
+  color: #212529;
+  line-height: 1.9rem;
+}
+
+#inputs h2 span {
+  color: #dc3545;
+  font-weight: 800;
+}
+
+#inputs section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #e9ecef;
+}
+
+#inputs label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icon styling for labels */
+#inputs label .label-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.8rem;
+}
+
+.start-icon {
+  background: #28a745;
+  color: white;
+}
+
+.dest-icon {
+  background: #dc3545;
+  color: white;
+}
+
+/* Input container with icon */
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-container .input-icon {
+  position: absolute;
+  left: 12px;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.75rem;
+}
+
+#inputs input[type="text"],
+#inputs select {
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ced4da;
+  border-radius: 10px;
+  background: #f8f9fa;
+  font-size: 1rem;
+  color: #212529;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#inputs input[type="text"]:focus,
+#inputs select:focus {
+  outline: none;
+  border-color: #dc3545;
+  background-color: #fff;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+#inputs button {
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #dc3545;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#inputs button:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+#inputs h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+/* Map fills remaining space */
+#map {
+  flex-grow: 1;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Right panel - floating over map */
+#right-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: calc(100vh - 40px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow-y: auto;
+  z-index: 2000;
+  display: none;
+  /* Initially hidden */
+  flex-direction: column;
+  gap: 16px;
+}
+
+#right-panel.show {
+  display: flex;
+}
+
+/* Info section */
+#info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #212529;
+  font-weight: 600;
+  border-bottom: 2px solid #dc3545;
+  padding-bottom: 8px;
+}
+
+#rdetails,
+#cdetails {
+  background: rgba(248, 249, 250, 0.8);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #495057;
+  line-height: 1.5;
+}
+
+/* Footer log output */
+#log-footer {
+  margin-top: auto;
+  padding: 12px 16px;
+  border-top: 1px solid #dee2e6;
+  font-size: 0.85rem;
+  color: #495057;
+  background: #f8f9fa;
+  border-radius: 8px;
+  height: 120px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+}
+
+/* Utility class */
+.hidden {
+  display: none !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #left-panel {
+    width: 280px;
   }
-  
-  #sidebar input[type="text"],
-  #sidebar select {
-    margin-top: 8px;
-    width: 100%;
-    padding: 5px;
-    border: none;
-    border-radius: 7px;
-    background: #444;
-    color: #eee;
-    box-sizing: border-box;
+
+  #right-panel {
+    width: 250px;
+    right: 10px;
+    top: 10px;
+    max-height: calc(100vh - 20px);
   }
-  
-  #sidebar button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 4px;
-    background: #007acc;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  #sidebar button:hover {
-    background: #005fa3;
-  }
-  
-  #sidebar #output {
-    background: #333;
-    padding: 10px;
-    border-radius: 4px;
-    font-size: 0.9em;
-  }
-  
-  /* Map container */
-  #map {
-    position: absolute;
-    top: 0;
-    left: 300px;
-    right: 0;
-    bottom: 0;
-  }
-  
+}

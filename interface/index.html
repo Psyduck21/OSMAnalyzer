@@ -1,61 +1,91 @@
-<!-- File: web/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OSM Analyzer</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OSM Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="sidebar">
-        <h2><span>Shortest</span> Path</h2>
-        <h2 id="map-icon"><span>Critical</span> Points</h2>
+  <div id="left-panel">
+    <div id="inputs">
+      <h2><span>Shortest</span> Path</h2>
+      <h2 id="map-icon"><span>Critical</span> Points</h2>
+      <section>
+        <label>
+          <span class="label-icon start-icon">
+            <i class="fas fa-play"></i>
+          </span>
+          Start:
+        </label>
+        <div class="input-container">
+          <span class="input-icon start-icon">
+            <i class="fas fa-play"></i>
+          </span>
+          <input type="text" id="start-input" placeholder="Start location..." list="start-list" />
+          <datalist id="start-list"></datalist>
+        </div>
 
+        <label>
+          <span class="label-icon dest-icon">
+            <i class="fas fa-flag-checkered"></i>
+          </span>
+          End:
+        </label>
+        <div class="input-container">
+          <span class="input-icon dest-icon">
+            <i class="fas fa-flag-checkered"></i>
+          </span>
+          <input type="text" id="end-input" placeholder="End location..." list="end-list" />
+          <datalist id="end-list"></datalist>
+        </div>
 
-        <section>
-            <label>
-                Start:
-                <input type="text" id="start-input" placeholder="Lat, Lng or Location name" />
-            </label>
-            <label>
-                End:
-                <input type="text" id="end-input" placeholder="Lat, Lng or Location name" />
-            </label>
-            <button id="loc-btn">Use map clicks</button>
-        </section>
-
-        <section>
-            <h3>Algorithm</h3>
-            <select id="algo-select">
-                <option value="dijkstra">Dijkstra</option>
-                <option value="astar">A*</option>
-            </select>
-        </section>
-
-        <section>
-            <h3>Options</h3>
-            <button id="find-btn">Find Shortest Path</button>
-            <button id="crit-btn">Critical Points</button>
-            <button id="reset-btn">Reset Map</button>
-        </section>
-
-        <section id="info">
-            <h3>Details</h3>
-            <div id="output">Select start and end to see path details.</div>
-        </section>
+        <button id="loc-btn">
+          <i class="fas fa-map-marker-alt"></i> Use map clicks
+        </button>
+      </section>
+      <section>
+        <h3>Algorithm</h3>
+        <select id="algo-select">
+          <option value="dijkstra">Dijkstra</option>
+          <option value="astar">A*</option>
+        </select>
+      </section>
+      <section>
+        <h3>Options</h3>
+        <button id="find-btn">
+          <i class="fas fa-route"></i> Find Shortest Path
+        </button>
+        <button id="crit-btn">
+          <i class="fas fa-exclamation-triangle"></i> Critical Points
+        </button>
+      </section>
+      <footer id="log-footer">
+        <div>Ready to analyze routes...</div>
+      </footer>
     </div>
+  </div>
+  <div id="map"></div>
+  <div id="right-panel">
+    <section id="info">
+      <h3><i class="fas fa-info-circle"></i> Route Details</h3>
+      <div id="rdetails">Select start and end to see path details.</div>
+      <h3><i class="fas fa-exclamation-triangle"></i> Critical Points</h3>
+      <div id="cdetails">Click on Critical Points button.</div>
+    </section>
+  </div>
 
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Emscripten-generated graph module -->
-    <script src="../build/wasm/graph.js"></script>
-    <!-- Your application logic -->
-    <script type="module" src="app.js"></script>
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 
 </html>
