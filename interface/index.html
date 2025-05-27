@@ -1,0 +1,61 @@
+<!-- File: web/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OSM Analyzer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="sidebar">
+        <h2><span>Shortest</span> Path</h2>
+        <h2 id="map-icon"><span>Critical</span> Points</h2>
+
+
+        <section>
+            <label>
+                Start:
+                <input type="text" id="start-input" placeholder="Lat, Lng or Location name" />
+            </label>
+            <label>
+                End:
+                <input type="text" id="end-input" placeholder="Lat, Lng or Location name" />
+            </label>
+            <button id="loc-btn">Use map clicks</button>
+        </section>
+
+        <section>
+            <h3>Algorithm</h3>
+            <select id="algo-select">
+                <option value="dijkstra">Dijkstra</option>
+                <option value="astar">A*</option>
+            </select>
+        </section>
+
+        <section>
+            <h3>Options</h3>
+            <button id="find-btn">Find Shortest Path</button>
+            <button id="crit-btn">Critical Points</button>
+            <button id="reset-btn">Reset Map</button>
+        </section>
+
+        <section id="info">
+            <h3>Details</h3>
+            <div id="output">Select start and end to see path details.</div>
+        </section>
+    </div>
+
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Emscripten-generated graph module -->
+    <script src="../build/wasm/graph.js"></script>
+    <!-- Your application logic -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
