@@ -82,7 +82,7 @@ legend.addTo(map);
 // Enhanced route styling configuration
 const routeStyles = [
   {
-    color: '#28a745',
+    color: '#007FFF',
     weight: 8,
     opacity: 0.95,
     dashArray: null,
@@ -102,7 +102,7 @@ const routeStyles = [
     shadowColor: '#fd7e1440'
   },
   {
-    color: '#6f42c1',
+    color: '#28a745',
     weight: 5,
     opacity: 0.8,
     dashArray: '18, 12',
@@ -472,8 +472,8 @@ function clearAll() {
     map.removeLayer(criticalPointsGroup);
   }
 
-  criticalMarkers.forEach(m => map.removeLayer(m));
-  criticalMarkers = [];
+  // criticalMarkers.forEach(m => map.removeLayer(m));
+  // criticalMarkers = [];
 
   rdetails.innerHTML = "Select start and end points to see route analysis.";
   cdetails.innerHTML = "Click on Critical Points button to analyze network vulnerabilities.";
@@ -591,14 +591,39 @@ function setupManualSelection() {
     }
   });
 }
+function highlightRoute(indexToHighlight) {
+  for (let i = 0; i < routeLines.length; i++) {
+    // Only modify the colored routeLine (odd indexes)
+    if (i % 2 === 1) {
+      const routeIndex = (i - 1) / 2;
+      const routeLine = routeLines[i];
+      const style = routeStyles[routeIndex] || routeStyles[0]; // fallback
 
-function highlightRoute(routeCoordinates) {
-  L.polyline(routeCoordinates, {
-    color: 'blue',
-    weight: 4,
-    opacity: 0.8
-  }).addTo(map);
+      if (!routeLine) continue;
+
+      if (routeIndex === indexToHighlight) {
+        // Highlight this route
+        routeLine.setStyle({
+          color: style.color,
+          weight: style.weight + 2,
+          opacity: 1,
+          dashArray: null,
+        });
+        routeLines[i].bringToFront();
+      } else {
+        // Fade out others
+        routeLines[i].setStyle({
+          weight: style.weight,
+          color: '#aaa',
+          opacity: 0.3,
+          dashArray: '5, 10',
+        });
+      }
+    }
+  }
 }
+
+
 
 
 function determineCoordinatesAndLabels() {
@@ -630,6 +655,9 @@ function determineCoordinatesAndLabels() {
 
 async function calculateShortestPath() {
   try {
+    if (criticalPointsGroup && map.hasLayer(criticalPointsGroup)) {
+    map.removeLayer(criticalPointsGroup);
+    }
     const { startLat, startLon, endLat, endLon, startLabel, endLabel } = determineCoordinatesAndLabels();
     const useAstar = algoSelect.value === 'astar' ? 1 : 0;
 
@@ -705,8 +733,16 @@ async function calculateShortestPath() {
         </div>
       `);
 
-      routeLine.on('mouseover', () => routeLine.setStyle({ weight: style.weight + 2, opacity: 1 }));
-      routeLine.on('mouseout', () => routeLine.setStyle({ weight: style.weight, opacity: style.opacity }));
+      routeLine.on('mouseover', function (e) {
+        this.setStyle({ weight: style.weight + 2, opacity: 1 });
+        this.openPopup(e.latlng);
+      });
+
+      routeLine.on('mouseout', function () {
+        this.setStyle({ weight: style.weight, opacity: style.opacity });
+        this.closePopup();
+      });
+
       routeLine.on('click', (e) => {
         L.DomEvent.stopPropagation(e);
         highlightRoute(index);
