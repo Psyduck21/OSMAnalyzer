@@ -592,6 +592,14 @@ function setupManualSelection() {
   });
 }
 
+function highlightRoute(routeCoordinates) {
+  L.polyline(routeCoordinates, {
+    color: 'blue',
+    weight: 4,
+    opacity: 0.8
+  }).addTo(map);
+}
+
 
 function determineCoordinatesAndLabels() {
   let startLat, startLon, endLat, endLon, startLabel, endLabel;
