@@ -45,10 +45,44 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
+const legend = L.control({ position: 'bottomleft' });
+legend.onAdd = function (map) {
+  const div = L.DomUtil.create('div', 'critical-legend');
+  div.innerHTML = `
+        <div style="
+          background: rgba(255, 255, 255, 0.95);
+          padding: 12px;
+          border-radius: 8px;
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+          border-left: 4px solid #FF1744;
+          font-size: 12px;
+        ">
+          <h4 style="margin: 0 0 8px 0; color: #333;">⚠️ Critical Points</h4>
+          <div style="display: flex; align-items: center; margin-bottom: 4px;">
+            <div style="
+              width: 12px; 
+              height: 12px; 
+              border-radius: 50%; 
+              background: linear-gradient(135deg, #FF1744, #FF1744cc);
+              margin-right: 8px;
+              border: 1px solid white;
+            "></div>
+            <span>Network Vulnerability Points</span>
+          </div>
+          <div style="font-size: 10px; color: #666; margin-top: 6px;">
+            Points where network disruption<br>would significantly impact connectivity
+          </div>
+        </div>
+      `;
+  return div;
+};
+
+legend.addTo(map);
+
 // Enhanced route styling configuration
 const routeStyles = [
   {
-    color: '#6f42c1',
+    color: '#28a745',
     weight: 8,
     opacity: 0.95,
     dashArray: null,
@@ -68,7 +102,7 @@ const routeStyles = [
     shadowColor: '#fd7e1440'
   },
   {
-    color: '#28a745',
+    color: '#6f42c1',
     weight: 5,
     opacity: 0.8,
     dashArray: '18, 12',
@@ -198,9 +232,9 @@ function createRouteDetailsPanel(routes, executionTime, startLabel, endLabel) {
 
   routes.forEach((route, index) => {
     const style = routeStyles[index];
-    const distance = (route.length / 1000).toFixed(2);
-    const difference = index === 0 ? 0 : ((route.length - routes[0].length) / 1000).toFixed(2);
-    const percentDiff = index === 0 ? 0 : (((route.length - routes[0].length) / routes[0].length) * 100).toFixed(1);
+    const distance = (route.distance / 1000).toFixed(2);
+    const difference = index === 0 ? 0 : ((route.distance - routes[0].distance) / 1000).toFixed(2);
+    const percentDiff = index === 0 ? 0 : (((route.distance - routes[0].distance) / routes[0].distance) * 100).toFixed(1);
 
     detailsHTML += `
       <div class="route-card" data-route-index="${index}" style="
@@ -301,8 +335,8 @@ function createRouteDetailsPanel(routes, executionTime, startLabel, endLabel) {
   });
 
   // Route comparison summary
-  const shortest = routes[0].length / 1000;
-  const longest = routes[routes.length - 1].length / 1000;
+  const shortest = routes[0].distance / 1000;
+  const longest = routes[routes.distance - 1].distance / 1000;
   const variation = ((longest - shortest) / shortest * 100).toFixed(1);
 
   detailsHTML += `
@@ -597,7 +631,7 @@ async function calculateShortestPath() {
     clearAllRoutes();
 
     const result = wasmAPI.findkShortestRoute(startLat, startLon, endLat, endLon, useAstar);
-    console.log('Route calculation result:', result);
+    // console.log('Route calculation result:', result);
 
     if (!result.yenKShortestPaths || !result.yenKShortestPaths.length) {
       rdetails.innerHTML = `
@@ -616,6 +650,7 @@ async function calculateShortestPath() {
     }
 
     const routes = result.yenKShortestPaths;
+    // console.log(routes);
     const executionTime = result.executionTime || 0;
 
     const validRoutes = routes.filter(route => route.coordinates?.length);
@@ -628,8 +663,9 @@ async function calculateShortestPath() {
     const routesToDisplay = showOnlyOptimal ? validRoutes.slice(0, 1) : validRoutes;
 
     routesToDisplay.forEach((route, index) => {
+      console.log(route.distance);
       const style = routeStyles[index];
-
+      // console.log((route.coordinates.length / 1000));
       const shadowLine = L.polyline(route.coordinates, {
         weight: style.weight + 3,
         color: '#000',
@@ -654,7 +690,7 @@ async function calculateShortestPath() {
             ${style.icon} ${style.label}
           </h4>
           <div style="font-size: 13px;">
-            <div><strong>Distance:</strong> ${(route.length / 1000).toFixed(2)} km</div>
+            <div><strong>Distance:</strong> ${(route.distance / 1000).toFixed(2)} km</div>
             <div><strong>Waypoints:</strong> ${route.coordinates.length}</div>
             <div><strong>Priority:</strong> <span style="color: ${style.color};">${style.priority}</span></div>
           </div>
@@ -912,41 +948,6 @@ function detectCriticalPoints() {
 
     // Add the cluster group to the map
     map.addLayer(criticalPointsGroup);
-
-    // Optional: Add a legend for critical points
-    const legend = L.control({ position: 'bottomright' });
-    legend.onAdd = function (map) {
-      const div = L.DomUtil.create('div', 'critical-legend');
-      div.innerHTML = `
-        <div style="
-          background: rgba(255, 255, 255, 0.95);
-          padding: 12px;
-          border-radius: 8px;
-          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-          border-left: 4px solid #FF1744;
-          font-size: 12px;
-        ">
-          <h4 style="margin: 0 0 8px 0; color: #333;">⚠️ Critical Points</h4>
-          <div style="display: flex; align-items: center; margin-bottom: 4px;">
-            <div style="
-              width: 12px; 
-              height: 12px; 
-              border-radius: 50%; 
-              background: linear-gradient(135deg, #FF1744, #FF1744cc);
-              margin-right: 8px;
-              border: 1px solid white;
-            "></div>
-            <span>Network Vulnerability Points</span>
-          </div>
-          <div style="font-size: 10px; color: #666; margin-top: 6px;">
-            Points where network disruption<br>would significantly impact connectivity
-          </div>
-        </div>
-      `;
-      return div;
-    };
-
-    legend.addTo(map);
 
     cdetails.innerHTML = `
       <div style="color: #28a745;">

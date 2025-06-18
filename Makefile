@@ -3,7 +3,7 @@ SRC_DIR := src
 INCLUDE_DIR := include
 BUILD_DIR := build
 NATIVE_DIR := $(BUILD_DIR)/native
-WASM_DIR := $(BUILD_DIR)/wasm
+WASM_DIR := public
 
 # Files
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
@@ -31,7 +31,7 @@ $(NATIVE_EXEC): $(NATIVE_OBJ_FILES)
 
 # WebAssembly build
 wasm:
-	$(EMCC) $(CXXFLAGS) $(SRC_FILES) -o web/graph.js \
+	$(EMCC) $(CXXFLAGS) $(SRC_FILES) -o $(WASM_DIR)/graph.js \
 		-s WASM=1 \
 		-s MODULARIZE=1 \
 		-s EXPORT_ES6=1 \
