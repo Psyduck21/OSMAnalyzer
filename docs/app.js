@@ -336,7 +336,7 @@ function createRouteDetailsPanel(routes, executionTime, startLabel, endLabel) {
 
   // Route comparison summary
   const shortest = routes[0].distance / 1000;
-  const longest = routes[routes.distance - 1].distance / 1000;
+  const longest = routes[routes.length - 1].distance / 1000;
   const variation = ((longest - shortest) / shortest * 100).toFixed(1);
 
   detailsHTML += `
