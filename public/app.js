@@ -980,7 +980,7 @@ async function initializeApp() {
   showLoading('Loading graph and initializing...');
   try {
     wasmAPI = await initWasm();
-    wasmAPI.initGraph('/data/dehradun.geojson');
+    wasmAPI.initGraph('./data/dehradun.geojson');
     clearLoading('Application ready!');
     setUIEnabled(true);
   } catch (err) {
@@ -991,7 +991,7 @@ async function initializeApp() {
 
 // DOM Ready
 window.addEventListener('DOMContentLoaded', () => {
-  fetch('/data/places.json')
+  fetch('./data/places.json')
     .then(response => response.json())
     .then(data => {
       locations = data;
